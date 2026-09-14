@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Event Manager - API Test Console</title>
+<!--  <link rel="stylesheet" href="../static/css/styles.css">-->
+  <link rel="stylesheet"
+        th:href="@{/css/styles.css}">
+</head>
+<body>
+
+<header>
+  <h1>Event Manager</h1>
+  <p>API test console — calls the REST endpoints directly from this page.</p>
+</header>
+
+<nav class="tabs">
+  <button class="tab-btn active" data-tab="users">Users</button>
+  <button class="tab-btn" data-tab="events">Events</button>
+  <button class="tab-btn" data-tab="reservations">Reservations</button>
+</nav>
+
+<main>
+
+  <!-- ===================== USERS ===================== -->
+  <section id="users" class="tab-panel active">
+
+    <div class="card">
+      <h2>List / Get Users</h2>
+      <div class="row">
+        <button onclick="listUsers()">GET all users</button>
+        <input type="number" id="userGetId" placeholder="User ID">
+        <button onclick="getUser()">GET by ID</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Create User</h2>
+      <div class="row">
+        <input type="text" id="userName" placeholder="Name">
+        <input type="email" id="userEmail" placeholder="Email">
+        <input type="password" id="userPassword" placeholder="Password">
+        <button onclick="createUser()">POST create</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Update User</h2>
+      <div class="row">
+        <input type="number" id="userUpdateId" placeholder="User ID">
+        <input type="text" id="userUpdateName" placeholder="Name">
+        <input type="email" id="userUpdateEmail" placeholder="Email">
+        <input type="password" id="userUpdatePassword" placeholder="Password (optional)">
+        <button onclick="updateUser()">PUT update</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Delete User</h2>
+      <div class="row">
+        <input type="number" id="userDeleteId" placeholder="User ID">
+        <button class="danger" onclick="deleteUser()">DELETE</button>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ===================== EVENTS ===================== -->
+  <section id="events" class="tab-panel">
+
+    <div class="card">
+      <h2>List / Search / Get Events</h2>
+      <div class="row">
+        <button onclick="listEvents()">GET all events</button>
+      </div>
+      <div class="row">
+        <input type="text" id="eventSearchTitle" placeholder="Search by title">
+        <button onclick="searchEventsByTitle()">Search title</button>
+        <input type="text" id="eventSearchLocation" placeholder="Search by location">
+        <button onclick="searchEventsByLocation()">Search location</button>
+      </div>
+      <div class="row">
+        <input type="number" id="eventGetId" placeholder="Event ID">
+        <button onclick="getEvent()">GET by ID</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Create Event</h2>
+      <div class="row">
+        <input type="text" id="eventTitle" placeholder="Title">
+        <input type="text" id="eventLocation" placeholder="Location">
+        <input type="number" id="eventCapacity" placeholder="Capacity">
+      </div>
+      <div class="row">
+        <input type="datetime-local" id="eventDate">
+        <input type="text" id="eventDescription" placeholder="Description" class="wide">
+      </div>
+      <div class="row">
+        <button onclick="saveEvent()">POST create</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Update Event</h2>
+      <div class="row">
+        <input type="number" id="eventUpdateId" placeholder="Event ID">
+        <input type="text" id="eventUpdateTitle" placeholder="Title">
+        <input type="text" id="eventUpdateLocation" placeholder="Location">
+        <input type="number" id="eventUpdateCapacity" placeholder="Capacity">
+      </div>
+      <div class="row">
+        <input type="datetime-local" id="eventUpdateDate">
+        <input type="text" id="eventUpdateDescription" placeholder="Description" class="wide">
+      </div>
+      <div class="row">
+        <button onclick="updateEvent()">PUT update</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Delete Event</h2>
+      <div class="row">
+        <input type="number" id="eventDeleteId" placeholder="Event ID">
+        <button class="danger" onclick="deleteEvent()">DELETE</button>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ===================== RESERVATIONS ===================== -->
+  <section id="reservations" class="tab-panel">
+
+    <div class="card">
+      <h2>List / Get Reservations</h2>
+      <div class="row">
+        <button onclick="listReservations()">GET all reservations</button>
+      </div>
+      <div class="row">
+        <input type="number" id="resFilterUserId" placeholder="Filter by User ID">
+        <button onclick="listReservationsByUser()">Filter by user</button>
+        <input type="number" id="resFilterEventId" placeholder="Filter by Event ID">
+        <button onclick="listReservationsByEvent()">Filter by event</button>
+      </div>
+      <div class="row">
+        <input type="number" id="resGetId" placeholder="Reservation ID">
+        <button onclick="getReservation()">GET by ID</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Create Reservation</h2>
+      <div class="row">
+        <input type="number" id="resUserId" placeholder="User ID">
+        <input type="number" id="resEventId" placeholder="Event ID">
+        <input type="number" id="resSeats" placeholder="Number of seats" value="1">
+        <button onclick="createReservation()">POST create</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Cancel Reservation</h2>
+      <div class="row">
+        <input type="number" id="resCancelId" placeholder="Reservation ID">
+        <button onclick="cancelReservation()">PATCH cancel</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Delete Reservation</h2>
+      <div class="row">
+        <input type="number" id="resDeleteId" placeholder="Reservation ID">
+        <button class="danger" onclick="deleteReservation()">DELETE</button>
+      </div>
+    </div>
+
+  </section>
+
+</main>
+
+<footer>
+  <div class="response-header">
+    <h2>Response</h2>
+    <span id="statusBadge" class="badge">—</span>
+  </div>
+  <pre id="responseBox">Responses from the API will appear here.</pre>
+</footer>
+
+<script th:inline="none">
+  const API = '/api';
+
+  // ---------- tab switching ----------
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(btn.dataset.tab).classList.add('active');
+    });
+  });
+
+  // ---------- shared request helper ----------
+  async function apiCall(method, path, body) {
+    const statusBadge = document.getElementById('statusBadge');
+    const box = document.getElementById('responseBox');
+    statusBadge.textContent = '...';
+    statusBadge.className = 'badge';
+    try {
+      const options = { method, headers: {} };
+      if (body !== undefined) {
+        options.headers['Content-Type'] = 'application/json';
+        options.body = JSON.stringify(body);
+      }
+      const res = await fetch(API + path, options);
+      statusBadge.textContent = res.status + ' ' + res.statusText;
+      statusBadge.className = 'badge ' + (res.ok ? 'ok' : 'error');
+
+      let data = null;
+      const text = await res.text();
+      try { data = text ? JSON.parse(text) : null; } catch { data = text; }
+
+      box.textContent = data === null ? '(no content)' : JSON.stringify(data, null, 2);
+      return data;
+    } catch (err) {
+      statusBadge.textContent = 'Network error';
+      statusBadge.className = 'badge error';
+      box.textContent = String(err);
+    }
+  }
+
+  function val(id) {
+    const v = document.getElementById(id).value;
+    return v === '' ? undefined : v;
+  }
+  function numVal(id) {
+    const v = document.getElementById(id).value;
+    return v === '' ? undefined : Number(v);
+  }
+
+  // ---------- USERS ----------
+  function listUsers() { apiCall('GET', '/users'); }
+  function getUser() { apiCall('GET', `/users/${val('userGetId')}`); }
+  function createUser() {
+    apiCall('POST', '/users', {
+      name: val('userName'),
+      email: val('userEmail'),
+      password: val('userPassword')
+    });
+  }
+  function updateUser() {
+    const id = val('userUpdateId');
+    apiCall('PUT', `/users/${id}`, {
+      name: val('userUpdateName'),
+      email: val('userUpdateEmail'),
+      password: val('userUpdatePassword')
+    });
+  }
+  function deleteUser() { apiCall('DELETE', `/users/${val('userDeleteId')}`); }
+
+  // ---------- EVENTS ----------
+  function listEvents() { apiCall('GET', '/events'); }
+  function searchEventsByTitle() {
+    apiCall('GET', `/events?title=${encodeURIComponent(val('eventSearchTitle') || '')}`);
+  }
+  function searchEventsByLocation() {
+    apiCall('GET', `/events?location=${encodeURIComponent(val('eventSearchLocation') || '')}`);
+  }
+  function getEvent() { apiCall('GET', `/events/${val('eventGetId')}`); }
+  function saveEvent() {
+    apiCall('POST', '/events', {
+      title: val('eventTitle'),
+      description: val('eventDescription'),
+      location: val('eventLocation'),
+      eventDate: val('eventDate'),
+      capacity: numVal('eventCapacity')
+    });
+  }
+  function updateEvent() {
+    const id = val('eventUpdateId');
+    apiCall('PUT', `/events/${id}`, {
+      title: val('eventUpdateTitle'),
+      description: val('eventUpdateDescription'),
+      location: val('eventUpdateLocation'),
+      eventDate: val('eventUpdateDate'),
+      capacity: numVal('eventUpdateCapacity')
+    });
+  }
+  function deleteEvent() { apiCall('DELETE', `/events/${val('eventDeleteId')}`); }
+
+  // ---------- RESERVATIONS ----------
+  function listReservations() { apiCall('GET', '/reservations'); }
+  function listReservationsByUser() { apiCall('GET', `/reservations?userId=${val('resFilterUserId')}`); }
+  function listReservationsByEvent() { apiCall('GET', `/reservations?eventId=${val('resFilterEventId')}`); }
+  function getReservation() { apiCall('GET', `/reservations/${val('resGetId')}`); }
+  function createReservation() {
+    apiCall('POST', '/reservations', {
+      userId: numVal('resUserId'),
+      eventId: numVal('resEventId'),
+      numberOfSeats: numVal('resSeats')
+    });
+  }
+  function cancelReservation() { apiCall('PATCH', `/reservations/${val('resCancelId')}/cancel`); }
+  function deleteReservation() { apiCall('DELETE', `/reservations/${val('resDeleteId')}`); }
+</script>
+
+</body>
+</html>
