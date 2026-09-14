@@ -1,0 +1,35 @@
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-eventmanager}
+      POSTGRES_USER: ${POSTGRES_USER:-eventmanager}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-eventmanager}
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-eventmanager} -d ${POSTGRES_DB:-eventmanager}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    environment:
+      DB_URL: jdbc:postgresql://db:5432/${POSTGRES_DB:-eventmanager}
+      DB_USERNAME: ${POSTGRES_USER:-eventmanager}
+      DB_PASSWORD: ${POSTGRES_PASSWORD:-eventmanager}
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  db-data:
