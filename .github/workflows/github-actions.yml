@@ -41,7 +41,8 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
-          context: .
+          context: ./event-manager
+          file: ./event-manager/Dockerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
@@ -63,6 +64,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Pull and restart the app container
+        working-directory: ./event-manager
         run: |
           set -e
           echo "APP_IMAGE=${{ secrets.DOCKERHUB_USERNAME }}/event-manager:sha-${{ github.sha }}" > .env
