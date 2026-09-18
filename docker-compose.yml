@@ -18,8 +18,8 @@ services:
 
   app:
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: event-manager
+      dockerfile: event-manager/Dockerfile
     restart: unless-stopped
     environment:
       DB_URL: jdbc:postgresql://db:5432/${POSTGRES_DB:-eventmanager}

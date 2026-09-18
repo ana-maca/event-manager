@@ -6,6 +6,6 @@ target/
 .gitignore
 *.log
 .DS_Store
-Dockerfile
-docker-compose.yml
+../Dockerfile
+../docker-compose.yml
 .dockerignore

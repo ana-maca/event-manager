@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: event-manager
+  namespace: event-manager
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: event-manager
+
+  template:
+    metadata:
+      labels:
+        app: event-manager
+
+    spec:
+      containers:
+        - name: event-manager
+          image: event-manager-app:latest
+          imagePullPolicy: IfNotPresent
+
+          ports:
+            - containerPort: 8080
+
+          env:
+            - name: DB_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: DB_URL
+
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: app-secret
+                  key: DB_USERNAME
+
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: app-secret
+                  key: DB_PASSWORD
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: event-manager
+  namespace: event-manager
+spec:
+  selector:
+    app: event-manager
+
+  ports:
+    - port: 8080
+      targetPort: 8080
+
+  type: ClusterIP
